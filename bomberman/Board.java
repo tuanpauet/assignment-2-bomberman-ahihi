@@ -36,7 +36,7 @@ public class Board implements IRender {
 	
 	private int _time = Game.TIME;
 	private int _points = Game.POINTS;
-	
+	private int _lives = Game.LIVES;
 	public Board(Game game, Keyboard input, Screen screen) {
 		_game = game;
 		_input = input;
@@ -57,7 +57,7 @@ public class Board implements IRender {
 		
 		for (int i = 0; i < _characters.size(); i++) {
 			Character a = _characters.get(i);
-			if(a.isRemoved()) _characters.remove(i);
+			if(((Entity)a).isRemoved()) _characters.remove(i);
 		}
 	}
 
@@ -81,7 +81,28 @@ public class Board implements IRender {
 		renderCharacter(screen);
 		
 	}
-	
+	/*
+	 ChangeLevel
+	*/
+	public void newGame() {
+		resetProperties();
+		loadLevel(1);
+	}
+	private void resetProperties() {
+		_points = Game.POINTS;
+		_lives = Game.LIVES;
+		Bomber._powerups.clear();
+
+		_game.bomberSpeed = 1.0;
+		_game.bombRadius = 1;
+		_game.bombRate = 1;
+
+	}
+
+	public void restartLevel() {
+		loadLevel(_levelLoader.getLevel());
+	}
+
 	public void nextLevel() {
 		loadLevel(_levelLoader.getLevel() + 1);
 	}
@@ -350,6 +371,10 @@ public class Board implements IRender {
 		return _time;
 	}
 
+	public int getLives() {
+		return _lives;
+	}
+
 	public int getPoints() {
 		return _points;
 	}
@@ -357,7 +382,11 @@ public class Board implements IRender {
 	public void addPoints(int points) {
 		this._points += points;
 	}
-	
+
+	public void addLives(int lives) {
+		this._lives += lives;
+	}
+
 	public int getWidth() {
 		return _levelLoader.getWidth();
 	}
