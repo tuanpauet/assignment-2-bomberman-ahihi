@@ -1,16 +1,19 @@
 package uet.oop.bomberman.entities.bomb;
 
+import uet.oop.bomberman.Board;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.character.Bomber;
+import uet.oop.bomberman.entities.LayeredEntity;
+import uet.oop.bomberman.entities.character.enemy.Enemy;
+import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
-import uet.oop.bomberman.Board;
-
+//import uet.oop.bomberman.sound.Sound;
 public class FlameSegment extends Entity {
 
 	protected boolean _last = false;
-	protected Board _board;
-	protected Sprite _sprite1, _sprite2;
+	//protected Board _board;
+	//protected Sprite _sprite1, _sprite2;
 	/**
 	 *
 	 * @param x
@@ -19,11 +22,20 @@ public class FlameSegment extends Entity {
 	 * @param last cho biết segment này là cuối cùng của Flame hay không,
 	 *                segment cuối có sprite khác so với các segment còn lại
 	 */
-	public FlameSegment(int x, int y, int direction, boolean last, Board board) {
+	public FlameSegment(int x, int y, int direction, boolean last, Board _board) {
 		_x = x;
 		_y = y;
 		_last = last;
-		_board = board;
+		//_board = board;
+		Entity e = _board.getEntityAt(x,y);
+			System.out.println(e);
+
+		if(e instanceof LayeredEntity){
+			Entity top = ((LayeredEntity) e).getTopEntity();
+			if(top instanceof DestroyableTile){
+				((DestroyableTile) top).destroy();
+			}
+		}
 		switch (direction) {
 			case 0:
 				if(!last) {
@@ -70,8 +82,8 @@ public class FlameSegment extends Entity {
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: xử lý khi FlameSegment va chạm với Character
-		if(e instanceof Bomber) {
-			((Bomber)e).kill();
+		if(e instanceof Character) {
+			((Character)e).kill();
 		}
 		return true;
 	}

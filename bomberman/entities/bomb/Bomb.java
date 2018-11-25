@@ -81,9 +81,9 @@ public class Bomb extends AnimatedEntitiy {
 	protected void explosion() {
 		_exploded = true;
 		_allowedToPassThru = true;
-		Character a = _board.getCharacterAt(_x, _y);
-		if(a != null)  {
-			a.kill();
+		Entity a = _board.getCharacterAtExcluding((int)_x,(int)_y,null);
+		if(a instanceof Bomber)  {
+			((Bomber)a).kill();
 		}
 
 		_flames = new Flame[4];
@@ -108,6 +108,10 @@ public class Bomb extends AnimatedEntitiy {
 		}
 		
 		return null;
+	}
+
+	public boolean isExploded() {
+		return _exploded;
 	}
 
 	@Override

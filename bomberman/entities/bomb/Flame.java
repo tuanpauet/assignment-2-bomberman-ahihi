@@ -1,10 +1,15 @@
 package uet.oop.bomberman.entities.bomb;
 
 import uet.oop.bomberman.Board;
+import uet.oop.bomberman.Game;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.character.Bomber;
+import uet.oop.bomberman.entities.character.enemy.Enemy;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.tile.Wall;
+import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
+import uet.oop.bomberman.entities.LayeredEntity;
 
 public class Flame extends Entity {
 
@@ -12,7 +17,7 @@ public class Flame extends Entity {
 	protected int _direction;
 	private int _radius;
 	protected int xOrigin, yOrigin;
-	protected FlameSegment[] _flameSegments = new FlameSegment[0];
+	protected FlameSegment[] _flameSegments;
 
 	/**
 	 *
@@ -29,6 +34,8 @@ public class Flame extends Entity {
 		_direction = direction;
 		_radius = radius;
 		_board = board;
+		_flameSegments = new FlameSegment[ calculatePermitedDistance() ];
+
 		createFlameSegments();
 	}
 
@@ -39,12 +46,12 @@ public class Flame extends Entity {
 		/**
 		 * tính toán độ dài Flame, tương ứng với số lượng segment
 		 */
-		_flameSegments = new FlameSegment[calculatePermitedDistance()];
+		//_flameSegments = new FlameSegment[calculatePermitedDistance()];
 
 		/**
 		 * biến last dùng để đánh dấu cho segment cuối cùng
 		 */
-		boolean last;
+		boolean last = false;
 
 		// TODO: tạo các segment dưới đây
 		int x = (int)_x;
@@ -80,9 +87,9 @@ public class Flame extends Entity {
 
 			Entity a = _board.getEntity(x, y, null);
 
-			if(a instanceof Character) ++radius; //explosion has to be below the mob
+			if(a instanceof Character) ++radius;
 
-			if(a.collide(this) == false) //cannot pass thru
+			if(a.collide(this) == false)
 				break;
 
 			++radius;
@@ -111,6 +118,10 @@ public class Flame extends Entity {
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: xử lý va chạm với Bomber, Enemy. Chú ý đối tượng này có vị trí chính là vị trí của Bomb đã nổ
+		System.out.println(e);
+		if(e instanceof Character || e instanceof Enemy) {
+			((Character) e).kill();
+		}
 		return true;
 	}
 }

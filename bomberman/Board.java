@@ -6,6 +6,7 @@ import uet.oop.bomberman.entities.bomb.Bomb;
 import uet.oop.bomberman.entities.bomb.FlameSegment;
 import uet.oop.bomberman.entities.character.Bomber;
 import uet.oop.bomberman.entities.character.Character;
+import uet.oop.bomberman.entities.tile.item.Item;
 import uet.oop.bomberman.exceptions.LoadLevelException;
 import uet.oop.bomberman.graphics.IRender;
 import uet.oop.bomberman.graphics.Screen;
@@ -117,13 +118,29 @@ public class Board implements IRender {
 		_messages.clear();
 		
 		try {
-			_levelLoader = new FileLevelLoader(this, level);
+			_levelLoader = new FileLevelLoader(this, "levels/Level" + level + ".txt");
 			_entities = new Entity[_levelLoader.getHeight() * _levelLoader.getWidth()];
 			
 			_levelLoader.createEntities();
 		} catch (LoadLevelException e) {
 			endGame();
 		}
+	}
+	public void changeLevelByCode(String str) {
+		int i = _levelLoader.validCode(str);
+
+		if(i != -1) loadLevel(i + 1);
+	}
+
+	public boolean isPowerupUsed(int x, int y, int level) {
+		Item p;
+		for (int i = 0; i < Bomber._powerups.size(); i++) {
+			p = Bomber._powerups.get(i);
+			if(p.getX() == x && p.getY() == y && level == p.getLevel())
+				return true;
+		}
+
+		return false;
 	}
 	
 	protected void detectEndGame() {
