@@ -13,8 +13,9 @@ import uet.oop.bomberman.graphics.Sprite;
 
 public class FlameSegment extends Entity {
 
-	protected boolean _last;
-
+	protected boolean _last = false;
+	protected Board _board;
+	protected Sprite _sprite1,_sprite2;
 	/**
 	 *
 	 * @param x
@@ -27,6 +28,7 @@ public class FlameSegment extends Entity {
 		_x = x;
 		_y = y;
 		_last = last;
+		//_board = board;
 
 		Entity e = _board.getEntityAt(x, y);
 
@@ -43,28 +45,28 @@ public class FlameSegment extends Entity {
 
 		switch (direction) {
 			case 0:
-				if(!last) {
+				if(last == false) {
 					_sprite = Sprite.explosion_vertical2;
 				} else {
 					_sprite = Sprite.explosion_vertical_top_last2;
 				}
 				break;
 			case 1:
-				if(!last) {
+				if(last == false) {
 					_sprite = Sprite.explosion_horizontal2;
 				} else {
 					_sprite = Sprite.explosion_horizontal_right_last2;
 				}
 				break;
 			case 2:
-				if(!last) {
+				if(last == false) {
 					_sprite = Sprite.explosion_vertical2;
 				} else {
 					_sprite = Sprite.explosion_vertical_down_last2;
 				}
 				break;
 			case 3:
-				if(!last) {
+				if(last == false) {
 					_sprite = Sprite.explosion_horizontal2;
 				} else {
 					_sprite = Sprite.explosion_horizontal_left_last2;

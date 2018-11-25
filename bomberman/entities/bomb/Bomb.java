@@ -14,7 +14,7 @@ public class Bomb extends AnimatedEntitiy {
 
 	protected double _timeToExplode = 120; //2 seconds
 	public int _timeAfter = 20;
-	private static int _time = 20;
+
 	protected Board _board;
 	protected Flame[] _flames;
 	protected boolean _exploded = false;
@@ -83,7 +83,7 @@ public class Bomb extends AnimatedEntitiy {
 		_allowedToPassThru = true;
 		// TODO: xử lý khi Character đứng tại vị trí Bomb
 
-		Character a = _board.getCharacterAtExcluding((int)_x,(int)_y,null);
+		Character a = _board.getCharacterAt(_x,_y);
 		if(a != null)  {
 			a.kill();
 		}

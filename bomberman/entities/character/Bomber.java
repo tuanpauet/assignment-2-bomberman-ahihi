@@ -12,7 +12,13 @@ import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.input.Keyboard;
 import uet.oop.bomberman.level.Coordinates;
-
+import uet.oop.bomberman.entities.character.enemy.Balloon;
+import uet.oop.bomberman.entities.LayeredEntity;
+import uet.oop.bomberman.entities.bomb.FlameSegment;
+import uet.oop.bomberman.entities.tile.Grass;
+import uet.oop.bomberman.entities.tile.item.BombItem;
+import uet.oop.bomberman.entities.tile.item.FlameItem;
+import uet.oop.bomberman.entities.tile.item.SpeedItem;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -41,7 +47,7 @@ public class Bomber extends Character {
     @Override
     public void update() {
         clearBombs();
-        if (!_alive) {
+        if (_alive == false) {
             afterKill();
             return;
         }
@@ -130,7 +136,12 @@ public class Bomber extends Character {
     protected void afterKill() {
         if (_timeAfter > 0) --_timeAfter;
         else {
-            _board.endGame();
+            if(_bombs.size() == 0) {
+                if(_board.getLives() == 0)
+                    _board.endGame();
+                else
+                    _board.restartLevel();
+            }
         }
     }
 
@@ -156,9 +167,9 @@ public class Bomber extends Character {
     @Override
     public boolean canMove(double x, double y) {
         // TODO: kiểm tra có đối tượng tại vị trí chuẩn bị di chuyển đến và có thể di chuyển tới đó hay không
-        for (int c = 0; c < 4; c++) { //colision detection for each corner of the player
-            double xt = ((_x + x) + c % 2 * 11) / Game.TILES_SIZE; //divide with tiles size to pass to tile coordinate
-            double yt = ((_y + y) + c / 2 * 12 - 13) / Game.TILES_SIZE; //these values are the best from multiple tests
+        for (int c = 0; c < 4; c++) {
+            double xt = ((_x + x) + c % 2 * 11) / Game.TILES_SIZE;
+            double yt = ((_y + y) + c / 2 * 12 - 13) / Game.TILES_SIZE;
 
             Entity a = _board.getEntity(xt, yt, this);
 
@@ -193,17 +204,41 @@ public class Bomber extends Character {
     public boolean collide(Entity e) {
         // TODO: xử lý va chạm với Flame
         // TODO: xử lý va chạm với Enemy
-        if(e instanceof Flame) {
-            kill();
+        if (e instanceof FlameSegment) {
+            this.kill();
+            return false;
+        } else if (e instanceof Enemy) {
+            this.kill();
+            return false;
+        }else if(e.getSprite() == Sprite.bomb){
+            return true;
+        }else if(e instanceof LayeredEntity){
+            if(((LayeredEntity) e).getTopEntity() instanceof Grass)
+                return true;
+            else if (((LayeredEntity) e).getTopEntity() instanceof SpeedItem){
+                System.out.println("speed item");
+                return ((LayeredEntity) e).getTopEntity().collide(this);
+//                remove();
+            }
+            else if (((LayeredEntity) e).getTopEntity() instanceof BombItem){
+                System.out.println("bomb item");
+                return ((LayeredEntity) e).getTopEntity().collide(this);
+            }
+            else if (((LayeredEntity) e).getTopEntity() instanceof FlameItem){
+                System.out.println("flame item");
+                return ((LayeredEntity) e).getTopEntity().collide(this);
+            }
+            else return false;
+        }
+        else if (e.getSprite() == Sprite.wall) {
+            return false;
+        }else if (e instanceof Balloon) {
+            this.kill();
             return false;
         }
 
-        if(e instanceof Enemy) {
-            kill();
-            return true;
-        }
-
         return true;
+
     }
 
     /*

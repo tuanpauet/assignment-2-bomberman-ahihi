@@ -11,7 +11,7 @@ import java.util.LinkedList;
  */
 public class LayeredEntity extends Entity {
 	
-	protected LinkedList<Entity> _entities = new LinkedList<>();
+	protected LinkedList<Entity> _entities = new LinkedList<Entity>();
 	
 	public LayeredEntity(int x, int y, Entity ... entities) {
 		_x = x;
@@ -58,7 +58,7 @@ public class LayeredEntity extends Entity {
 	@Override
 	public boolean collide(Entity e) {
 		// TODO: lấy entity trên cùng ra để xử lý va chạm
-		return false;
+		return getTopEntity().collide(e);
 	}
 
 }
