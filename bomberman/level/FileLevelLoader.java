@@ -127,8 +127,8 @@ public class FileLevelLoader extends LevelLoader {
 	}
     */
         int pos = x + y * getWidth();
-                //System.out.printf ("x = %d and y = %d and pos = %d\n", x, y, pos);
-        switch(c) { // TODO: minimize this method
+                System.out.printf ("x = %d and y = %d and pos = %d\n", x, y, pos);
+        switch(c) {
             case '#':
                 _board.addEntity(pos, new Wall(x, y, Sprite.wall));
                 break;

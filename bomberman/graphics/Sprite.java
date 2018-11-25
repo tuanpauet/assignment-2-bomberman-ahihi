@@ -231,9 +231,16 @@ public class Sprite {
 	public int getSize() {
 		return SIZE;
 	}
-
+	public int[] getPixels(){ return _pixels;}
 	public int getPixel(int i) {
 		return _pixels[i];
+	}
+	public int getRealWidth() {
+		return _realWidth;
+	}
+
+	public int getRealHeight() {
+		return _realHeight;
 	}
 
 }

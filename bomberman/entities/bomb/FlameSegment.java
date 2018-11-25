@@ -9,11 +9,12 @@ import uet.oop.bomberman.entities.tile.destroyable.DestroyableTile;
 import uet.oop.bomberman.graphics.Screen;
 import uet.oop.bomberman.graphics.Sprite;
 //import uet.oop.bomberman.sound.Sound;
+
+
 public class FlameSegment extends Entity {
 
-	protected boolean _last = false;
-	//protected Board _board;
-	//protected Sprite _sprite1, _sprite2;
+	protected boolean _last;
+
 	/**
 	 *
 	 * @param x
@@ -26,16 +27,20 @@ public class FlameSegment extends Entity {
 		_x = x;
 		_y = y;
 		_last = last;
-		//_board = board;
-		Entity e = _board.getEntityAt(x,y);
-			System.out.println(e);
 
-		if(e instanceof LayeredEntity){
+		Entity e = _board.getEntityAt(x, y);
+
+		System.out.println(e);
+
+		if(e instanceof LayeredEntity) {
 			Entity top = ((LayeredEntity) e).getTopEntity();
-			if(top instanceof DestroyableTile){
+			if (top instanceof DestroyableTile) {
 				((DestroyableTile) top).destroy();
 			}
 		}
+
+		System.out.println(e);
+
 		switch (direction) {
 			case 0:
 				if(!last) {
@@ -43,7 +48,7 @@ public class FlameSegment extends Entity {
 				} else {
 					_sprite = Sprite.explosion_vertical_top_last2;
 				}
-			break;
+				break;
 			case 1:
 				if(!last) {
 					_sprite = Sprite.explosion_horizontal2;
@@ -58,7 +63,7 @@ public class FlameSegment extends Entity {
 					_sprite = Sprite.explosion_vertical_down_last2;
 				}
 				break;
-			case 3: 
+			case 3:
 				if(!last) {
 					_sprite = Sprite.explosion_horizontal2;
 				} else {
@@ -66,27 +71,26 @@ public class FlameSegment extends Entity {
 				}
 				break;
 		}
+		collide(_board.getCharacterAtExcluding(x , y, null));
 	}
-	
+
 	@Override
 	public void render(Screen screen) {
 		int xt = (int)_x << 4;
 		int yt = (int)_y << 4;
-		
 		screen.renderEntity(xt, yt , this);
 	}
-	
+
 	@Override
 	public void update() {}
 
 	@Override
 	public boolean collide(Entity e) {
-		// TODO: xử lý khi FlameSegment va chạm với Character
-		if(e instanceof Character) {
-			((Character)e).kill();
+		if (e instanceof Character){
+			((Character) e).kill();
 		}
 		return true;
 	}
-	
+
 
 }

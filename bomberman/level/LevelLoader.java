@@ -35,6 +35,7 @@ public abstract class LevelLoader {
 	}
 
 	public abstract void loadLevel(String path) throws LoadLevelException;
+
 	public String getActualCode() {
 		return codes[_level -1];
 	}
